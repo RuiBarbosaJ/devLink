@@ -35,34 +35,29 @@ export function Admin() {
   // Pegando links que estiverem no banco de dados!
   useEffect(() => {
     const linksRef = collection(db, "links");
-    const queryRef = query(linksRef, orderBy("created", "asc")); // entrega os links do banco ja ordenados
+    const queryRef = query(linksRef, orderBy("created", "asc"));
 
     const unsub = onSnapshot(queryRef, (snapshot) => {
-      // snapshot = com ele podemos acessar cada documento do banco
-      const lista = [] as LinkProps[];
+      const lista: LinkProps[] = [];
 
-      snapshot.forEach((doc) => {
-        // com o forEach podemos passar por cada documento e por cada propriedade do documento
+      snapshot.forEach((docItem) => {
         lista.push({
-          id: doc.id,
-          name: doc.data().name,
-          url: doc.data().url,
-          bg: doc.data().bg,
-          color: doc.data().color,
+          id: docItem.id,
+          name: docItem.data().name,
+          url: docItem.data().url,
+          bg: docItem.data().bg,
+          color: docItem.data().color,
         });
-
-        setLinks(lista);
-
-        return () => {
-          console.log(
-            "Tirar o evento para não ficar ultilizando memoria quando não estiver usando"
-          );
-          unsub();
-        };
       });
-    });
-  }, []);
 
+      setLinks(lista);
+    });
+
+    return () => {
+      console.log("Removendo listener do Firestore...");
+      unsub();
+    };
+  }, []);
   function handleCadastrarUrl(e: FormEvent) {
     e.preventDefault();
 
@@ -86,6 +81,11 @@ export function Admin() {
       .catch((error) => {
         console.log("Erro ao cadastrar no banco: " + error);
       });
+  }
+
+  async function handleDeleteLink(id: string) {
+    const docRef = doc(db, "links", id);
+    await deleteDoc(docRef);
   }
 
   return (
@@ -176,7 +176,7 @@ export function Admin() {
 
           <div>
             <button
-              onClick={}
+              onClick={() => handleDeleteLink(link.id)}
               className="border border-dashed cursor-pointer bg-black"
             >
               <FiTrash size={18} color="white" />
