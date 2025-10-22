@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, useEffect } from "react";
 import { Header } from "../../components/header";
 import { Input } from "../../components/input";
 import { Button } from "../../components/button";
@@ -15,11 +15,53 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 
+interface LinkProps {
+  id: string;
+  name: string;
+  url: string;
+  bg: string;
+  color: string;
+}
+
 export function Admin() {
   const [nomeInput, setNomeInput] = useState("");
   const [urlInput, setUrlInput] = useState("");
   const [textColorInput, setTextColorInput] = useState("#f1f1f1");
   const [backgroundColorInput, setBackgroundColorInput] = useState("#121212");
+
+  // Pegamos os links do banco e agr add no useState para manipular:
+  const [links, setLinks] = useState<LinkProps[]>([]);
+
+  // Pegando links que estiverem no banco de dados!
+  useEffect(() => {
+    const linksRef = collection(db, "links");
+    const queryRef = query(linksRef, orderBy("created", "asc")); // entrega os links do banco ja ordenados
+
+    const unsub = onSnapshot(queryRef, (snapshot) => {
+      // snapshot = com ele podemos acessar cada documento do banco
+      const lista = [] as LinkProps[];
+
+      snapshot.forEach((doc) => {
+        // com o forEach podemos passar por cada documento e por cada propriedade do documento
+        lista.push({
+          id: doc.id,
+          name: doc.data().name,
+          url: doc.data().url,
+          bg: doc.data().bg,
+          color: doc.data().color,
+        });
+
+        setLinks(lista);
+
+        return () => {
+          console.log(
+            "Tirar o evento para não ficar ultilizando memoria quando não estiver usando"
+          );
+          unsub();
+        };
+      });
+    });
+  }, []);
 
   function handleCadastrarUrl(e: FormEvent) {
     e.preventDefault();
@@ -37,6 +79,8 @@ export function Admin() {
       created: new Date(),
     })
       .then(() => {
+        setNomeInput("");
+        setUrlInput("");
         console.log("CADASTRADO COM SUCESSO");
       })
       .catch((error) => {
@@ -86,6 +130,7 @@ export function Admin() {
             <label className="text-white font-medium mt-2 mb-2 ">
               Cor do link:
             </label>
+
             <input
               type="color"
               value={textColorInput}
@@ -121,17 +166,24 @@ export function Admin() {
 
       <h2 className="font-bold text-white mb-4 text-2xl">Meus links</h2>
 
-      <article
-        className="flex items-center justify-between w-11/12 max-w-xl rounded py-3 px-2 mb-2 select-none"
-        style={{ backgroundColor: "#FFF", color: "#000" }}
-      >
-        <p>Canal do youtube</p>
-        <div>
-          <button className="border border-dashed cursor-pointer bg-black">
-            <FiTrash size={18} color="white" />
-          </button>
-        </div>
-      </article>
+      {links.map((link) => (
+        <article
+          key={link.id}
+          className="flex items-center justify-between w-11/12 max-w-xl rounded py-3 px-2 mb-2 select-none"
+          style={{ backgroundColor: "#FFF", color: "#000" }}
+        >
+          <p>{link.name}</p>
+
+          <div>
+            <button
+              onClick={}
+              className="border border-dashed cursor-pointer bg-black"
+            >
+              <FiTrash size={18} color="white" />
+            </button>
+          </div>
+        </article>
+      ))}
     </div>
   );
 }
