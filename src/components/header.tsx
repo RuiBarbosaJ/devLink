@@ -17,7 +17,7 @@ export function Header() {
           <Link to={"/admin"}>Links</Link>
           <Link to={"/admin/social"}>Social media</Link>
         </div>
-        <button onClick={handleLogout}>
+        <button onClick={handleLogout} className="cursor-pointer">
           <BiLogOut size={28} color="ret" />
         </button>
       </nav>
