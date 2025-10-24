@@ -170,7 +170,7 @@ export function Admin() {
         <article
           key={link.id}
           className="flex items-center justify-between w-11/12 max-w-xl rounded py-3 px-2 mb-2 select-none"
-          style={{ backgroundColor: "#FFF", color: "#000" }}
+          style={{ backgroundColor: link.bg, color: link.color }}
         >
           <p>{link.name}</p>
 
