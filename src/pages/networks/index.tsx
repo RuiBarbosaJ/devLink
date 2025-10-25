@@ -24,7 +24,7 @@ export function Networks() {
     }
 
     loadLinks();
-  }, [facebook, instagram, youtube]);
+  }, []);
 
   function handleRegister(e: FormEvent) {
     e.preventDefault();
