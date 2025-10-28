@@ -8,6 +8,7 @@
   <p>Page admin</p>
   <img src="./public/assets/admin.png" width="45%"/>
   <p>Page admin/social</p>
+  <hr>
 </p>
 
 🧩 Sobre o Projeto
