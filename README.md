@@ -1,3 +1,48 @@
+🧩 Sobre o Projeto
+
+Esse projeto é um mini sistema de links personalizados, parecido com o Linktree, feito em React + Firebase.
+O usuário pode criar, listar e deletar links dentro de uma área administrativa protegida por login.
+
+🚀 Como funciona
+🔹 Página Inicial (/)
+
+Mostra todos os links cadastrados no banco de dados, com as cores definidas no painel.
+Também exibe ícones com as redes sociais cadastradas (Instagram, LinkedIn, etc).
+
+🔹 Login (/login)
+
+Tela simples onde o usuário faz login com email e senha.
+Após o login, é redirecionado automaticamente para a área admin.
+
+🔹 Área Administrativa (/admin)
+
+Somente acessível para quem estiver logado.
+Aqui o usuário pode:
+
+Cadastrar novos links (com nome, URL e cores personalizadas);
+
+Visualizar em tempo real os links já existentes;
+
+Deletar links que não quiser mais.
+
+🔹 Rota Protegida (Private.tsx)
+
+Garante que apenas usuários autenticados possam acessar o painel admin.
+Se o usuário não estiver logado, ele é mandado de volta para o /login.
+
+🔹 Página 404 (*)
+
+Mostra uma tela simples informando que a página não foi encontrada, com um botão para voltar à página inicial.
+
+🎨 Estilo
+
+O layout usa TailwindCSS e tem um tema escuro de fundo com destaque nas cores dos links.
+Arquivo principal de estilo: index.css.
+
+
+
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
